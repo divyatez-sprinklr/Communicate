@@ -84,6 +84,11 @@ body {
   background-color: #cef1d7;
 }
 
+.backgroundGrey {
+  background-color: #9da09e;
+}
+
+
 .backgroundGreen {
   background-color: #21e171;
 }
@@ -121,6 +126,10 @@ body {
 
 .borderRadius1001{
   border-radius: 10px 0px 0px 10px;
+}
+
+.borderRadius1100{
+  border-radius: 10px 10px 0px 0px;
 }
 
 .inputBox:focus {
@@ -242,4 +251,8 @@ h2,h3{
 
 .activeCallBox{
   background-color: rgb(186, 186, 186);;
+}
+
+.height30{
+  height: 30px;
 }

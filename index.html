@@ -8,11 +8,14 @@
     <link rel="stylesheet"
           type="text/css"
           href="./style.css">
+    <link rel="stylesheet"
+          type="text/css"
+          href="./dialpad.css">
 </head>
 <body>
   <!-- The title will change to greet the user -->
   <!-- <h1 id="title">Mai papa hu</h1>
-  <!-- <p id="logs"></p> 
+  <p id="logs"></p> 
   <input id="name-field" placeholder="Enter Your Name"/>
     <div id="notify"></div> -->
   <div class="root-container flexRow centerRow flexGap" id="root-box">
@@ -29,6 +32,7 @@
         <div class="content-body-container  padding10 maxWidth maxHeight80vh overflowScroll" id="content-body-box">
         </div>
     </div>
+
     <div class="sidebar-container flexCol centerCol flexGap maxHeight95vh width30vw border1B borderRadius" id="sidebar-box">
         <!-- <div class="options-container flexCol centerCol maxWidth">
             <h2>Options</h2>
@@ -41,7 +45,7 @@
             <button id="update-sip-creds-button"  class="buttons backgroundGreen">Update</button>
             </br>
             <hr style=" width:100%" class="border1B">
-            <!--- </br>
+             </br>
              <div class ='width25vw'>
                 <label class="toggle align-left">
                     <input id="session-storage-button" class="toggle-checkbox" type="checkbox">
@@ -50,15 +54,40 @@
                 </label>
             </div> -->
         <!--</div> -->
+
+
+
+        <div class="dialpad flexCol centerCol borderRadius10" id="dialpad-box">
+            <div class="maxWidth height30 backgroundGrey borderRadius1100" id="dialpad-box-header"></div>
+            <form class="dialpad-width">
+                <button class="dial-input-area-button">
+                    <img class='btn-icon' src="vertical.png"/>
+                </button>
+                <input class="dial-input-area" id="dialpad-input"/>
+                <button class="dial-input-area-button" id="dialpad-input-btn-backspace">
+                    <img class='btn-icon' src="backspace1.png" >
+                </button>
+              </form>
+            <div class="wrapper" id="dialpad-btn-container">
+                <!-- <div class="dialpad-btn flexCol centerRow centerCol">
+                    <p class="title-text removeDefaultPara fontColor">1</p>
+                    <p class="subline-text removeDefaultPara fontColor">abc</p>
+                </div> -->
+                
+            </div>
+        </div>
+
+
         <div class ='width25vw'>
             <h3>Logs</h3>
         </div>
-        <div class ='width25vw border1B' id="logs">
+        <div class ='width25vw border1B overflowScroll' id="logs">
         </div>
         </br>
     </div>
 </div>
 </body>
+<script src="dialpad.js"></script>
 
 <script>
 
@@ -134,7 +163,8 @@ function popupAssignment(){
     if(localStorage.getItem('popup_assigned') == 'null')
     {
         console.log('Popup doing');
-        open('./popup.html', 'popup',"left=0, bottom=0, width=10px, height=10px");
+        let popup_win = open('./popup.html', 'popup',"left=0, bottom=0, width=10px, height=10px");
+        document.getElementById('content-box').click();
         console.log('Popup assignment called');
         localStorage.setItem('popup_assigned',"popup"+config.id);
         console.log('Created PopUp');

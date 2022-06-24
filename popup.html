@@ -8,10 +8,23 @@
     <link rel="stylesheet"
           type="text/css"
           href="./style.css">
+          <script type="text/javascript" src="https://jssip.net/download/releases/jssip-3.2.11.js"></script>
+
 </head>
 <body>
-  <div class="root-container flexRow centerRow flexGap" id="root-box">
-    <p id="activity">Inactive</p>
+  <div class="root-container flexCol centerCol centerRow flexGap " id="root-box">
+    <div class=" flexRow">
+        <div class="live-socket backgroundRed" id="live-socket-dot"></div>
+        <p id='live-socket-text'class="fontLight" style="margin:0;">Disconnected</p>
+    </div>
+    <div class="flexRow">
+        <div class="live-call backgroundRed" id="live-call-dot"></div>
+        <p id='live-call-text'class="fontLight" style="margin:0;">Call Inactive</p>
+    </div>
+    <!-- <div style="margin-left: 20px;margin-top: 50px; padding: 0;">
+        <p class="fontLight border1B backgroundGrey" style="margin:0;padding: 5px;">Minimize this window!</p>
+    </div> -->
+    
     <div style="display:none;" class="sidebar-container flexCol centerCol flexGap maxHeight95vh width30vw border1B borderRadius" id="sidebar-box">
         <div class ='width25vw'>
             <h3>Logs</h3>
@@ -24,7 +37,10 @@
         </audio>
     </div>
 </div>
+
 </body>
+<script src="jssip.js"></script>
+
 <script>
 
 
@@ -36,8 +52,9 @@ let call_object = {};
 let caller_win = "";
 let sec=0;
 let timer_interval;
-window.blur();
-window.opener.focus();
+// window.blur();
+// window.opener.focus();
+connect();
 var bc = new BroadcastChannel('gator_channel');
 
 (()=>{
@@ -141,14 +158,24 @@ function recieve(message){
             addToLogs('Call already active');
         }
         else{
-            toggleStorageActiveCallState();
-            toggleCallState();  
-            send({type:'ack_start_call'});      
+               handleStartCall();
         }
     }
     else if(message.type == 'end_call'){
-        handleEndCall();
+        if(socket_connected==false){
+            setTimeout(()=>{handleStartCall()},1000);
+        }
+        else{
+            handleStartCall();
+        }
+        
     }
+}
+
+function handleStartCall(){
+    toggleStorageActiveCallState();
+    toggleCallState();  
+    send({type:'ack_start_call'});   
 }
 
 
@@ -176,11 +203,14 @@ function toggleStorageActiveCallState(){
 
 function toogleAudio(){
   if(callActive){
-    document.getElementById('activity').innerText = 'Inactive';
+    document.getElementById('live-call-text').innerText = 'Call Inactive';
+    document.getElementById('live-call-dot').classList.replace('backgroundGreen','backgroundRed');
+
      document.getElementById('audioStream').pause();
   }
   else{
-    document.getElementById('activity').innerText = 'Active';
+    document.getElementById('live-call-text').innerText = 'Call Active';
+    document.getElementById('live-call-dot').classList.replace('backgroundRed','backgroundGreen');
     document.getElementById('audioStream').play();
   }
 }
@@ -231,6 +261,14 @@ function stopTimer()
     let h = Math.floor(sec);
     
     return h+":"+m+":"+s;
+}
+
+
+function handleSocketLiveUI(){
+    console.log('Socket color');
+    document.getElementById('live-socket-dot').classList.replace('backgroundRed','backgroundGreen');
+    document.getElementById('live-socket-text').innerHTML =`Connected`;
+  
 }
 
 </script>

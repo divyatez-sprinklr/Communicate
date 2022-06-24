@@ -101,6 +101,10 @@ body {
   background-color: rgba(255, 0, 0, 0.2);
 }
 
+.backgroundYellow{
+  background-color: rgb(236, 188, 14);
+}
+
 #messages {
   border-radius: 0.25rem;
   padding: 5%;
@@ -265,5 +269,41 @@ h2,h3{
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background-color: rgb(236, 188, 14);
+}
+
+.online-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+}
+.live-socket{
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+}
+
+.call-box {
+  position: absolute;
+  top: 10;
+  left: 0;
+  padding: 10px;
+}
+
+.live-call{
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+}
+
+.fontLight{
+  font-size: small;
+}
+
+.flexGap2{
+  gap:5px;
+}
+
+.hide-visibility{
+  visibility: hidden;
 }

@@ -58,8 +58,10 @@
 
 
         <div class="dialpad flexCol centerCol borderRadius10 dialpad-height" id="dialpad-box">
-            <div class="maxWidth height30 backgroundGrey borderRadius1100 padding10" id="dialpad-box-header">
-                <div class="minimize" id="minimize-button"></div>
+            <div class=" flexRow flexGap2 maxWidth height30 backgroundGrey borderRadius1100 padding10" id="dialpad-box-header">
+                <div class="minimize backgroundYellow" id="minimize-button"></div>
+                <div class="minimize backgroundRed" id="dialpad-close-button"></div>
+
             </div>
             <div id="dialpad-body">
             <form class="dialpad-width ">
@@ -80,7 +82,10 @@
             </div>
         </div>
         </div>
-        <button id="reset-button"  class="align-left buttons">Reset</button>
+        <div class="flexRow flexGap">
+            <button id="reset-button"  class="align-left buttons">Reset</button>
+            <button id="dialpad-open-button"  class="align-left buttons">Dialpad</button>
+        </div>
         <div class ='width25vw' id="Notification">
         </div>
         <div class ='width25vw'>
@@ -366,6 +371,21 @@ document.getElementById('minimize-button').addEventListener('click',()=>{
         document.getElementById('dialpad-box').classList.add('dialpad-height');
 
     }
+})
+
+document.getElementById('dialpad-close-button').addEventListener('click',()=>{
+    console.log('clicked',true);
+    document.getElementById('dialpad-body').classList.add('hide-visibility');
+    document.getElementById('dialpad-box').classList.add('hide-visibility');
+
+})
+
+
+document.getElementById('dialpad-open-button').addEventListener('click',()=>{
+    console.log('clicked');
+    document.getElementById('dialpad-body').classList.remove('hide-visibility');
+    document.getElementById('dialpad-box').classList.remove('hide-visibility');
+
 })
 
 </script>

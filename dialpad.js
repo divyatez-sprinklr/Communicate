@@ -1,6 +1,13 @@
 
 
 let dialpadBtnContainer = document.getElementById('dialpad-btn-container');
+
+
+document.getElementById("dialpad-box").style.bottom = "0px";
+document.getElementById("dialpad-box").style.right = "30px";
+
+
+
 console.log('Me runnig');
 let arr =[
     {title:"1",subtitle:"_"},
@@ -51,7 +58,7 @@ arr.forEach(item => {
         //     dialpadInput.scrollLeft = dialpadInput.scrollWidth;
         // }
         handleFocus(dialpadInput.value.slice(0,cursorLocation));
-
+        handleUpdateFocusDialer()
 
     }
 
@@ -71,7 +78,7 @@ dialpadBtnContainer.innerHTML +=
 
 dialpadBtnContainer.innerHTML += 
     `<div class="dialbtn-wrapper">
-        <div class="dialpad-btn-caller flexCol centerRow centerCol" id="dialpad-caller-btn">
+        <div class="dialpad-btn-caller backgroundGreen flexCol centerRow centerCol" id="dialpad-caller-btn">
             <img class='dialpad-btn-caller-icon' src="phone.png"/>
         </div>
     </div>`;
@@ -95,6 +102,7 @@ document.getElementById('dialpad-input-btn-backspace').addEventListener('click',
     if(cursorLocation>0)
         cursorLocation--;
     handleFocus(dialpadInput.value.slice(0,cursorLocation));
+    handleUpdateFocusDialer();
 });
 
 
@@ -116,23 +124,21 @@ function getWidthOfText(txt, fontname, fontsize){
     return getWidthOfText.ctx.measureText(txt).width;
 }
 
-document.getElementById("dialpad-caller-btn").addEventListener('click',handleCallButtonTheme);
+document.getElementById('dialpad-input').addEventListener('input',()=>{ 
+    handleUpdateFocusDialer();
+})
 
-function handleCallButtonTheme(){
-    console.log('clicked');
-    let btn = document.getElementById("dialpad-caller-btn");
-    console.log(btn.style.backgroundColor);
-    callActive = (callActive+1)%2;
-    if(callActive)
-        btn.style.backgroundColor='#BA0001';
-    else{
-         btn.style.backgroundColor='#49B568';
-    }
+document.getElementById('number-area').addEventListener('input',()=>{ 
+    handleUpdateFocusParent();
+})
 
+function handleUpdateFocusDialer(){
+    document.getElementById('number-area').value = document.getElementById('dialpad-input').value;
 }
 
-
-
+function handleUpdateFocusParent(){
+    document.getElementById('dialpad-input').value = document.getElementById('number-area').value;
+}
 
 /////////Drag
 
@@ -162,8 +168,15 @@ function dragElement(elmnt) {
     pos2 = pos4 - e.clientY;
     pos3 = e.clientX;
     pos4 = e.clientY;
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    //console.log(window.innerWidth,elmnt.offsetLeft - pos1);
+    elmnt.style.bottom = '0px';
+    if(elmnt.offsetLeft - pos1<0)
+        elmnt.style.left=0;
+    else if(elmnt.offsetLeft - pos1>window.innerWidth-300)
+        elmnt.style.right=0;
+    else
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    
   }
 
   function closeDragElement() {

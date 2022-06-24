@@ -237,6 +237,11 @@ document.getElementById('dial-button').addEventListener('click',()=>{
     toggleCallStateStart();
 })
 
+document.getElementById('dialpad-caller-btn').addEventListener('click',()=>{
+    console.log('Dial Button CLicked');
+    toggleCallStateStart();
+})
+
 function toggleCallStateStart(){
     console.log('Toggle call state' );
     popupAssignment();
@@ -265,6 +270,7 @@ function toggleCallState(){
         //send({type:'start_call'});
         callActive =1;
         document.getElementById('dial-button').classList.replace('backgroundGreen','backgroundRed');
+        document.getElementById('dialpad-caller-btn').classList.replace('backgroundGreen','backgroundRed');
         handleDialStart(call_object);
     }
     else{
@@ -272,6 +278,7 @@ function toggleCallState(){
         console.log('ending call after ack');
         //send({type: 'end_call'});
         document.getElementById('dial-button').classList.replace('backgroundRed','backgroundGreen');
+        document.getElementById('dialpad-caller-btn').classList.replace('backgroundRed','backgroundGreen');
         callActive =0;
         updateCallObject();
 

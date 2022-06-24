@@ -178,6 +178,8 @@ function popupAssignment(){
 
 
 function getCallObject(){
+    //createCallObject();
+    call_object.id = callIdCreate();
     call_object.reciver  = document.getElementById('number-area').value;
 }
 
@@ -305,11 +307,11 @@ function updateCallObject(){
     if(document.getElementById(`${call_object.id}`)==null){
         addInCallBox(call_object);
     }else
-        document.getElementById(`${call_object.id}`).innerHTML = `TO: ${ack.reciver} </br> STATUS: ${ack.status} </br> DURATION: ${ack.duration} </br> Started:${ack.started} ID: ${ack.id} </br> `;
+        document.getElementById(`${call_object.id}`).innerHTML = `TO: ${ack.reciver} </br> STATUS: ${ack.status} </br> DURATION: ${ack.duration} </br> Started:${ack.started} </br> ID: ${ack.id} </br> `;
 }   
 
 function addInCallBox(ack){
-    document.getElementById('content-body-box').innerHTML = (`<div class='border1B padding10 borderRadius' id='${ack.id}'> TO: ${ack.reciver} </br> STATUS: ${ack.status} </br> DURATION: ${ack.duration} </br> Started:${ack.started} ID: ${ack.id} </br> </div></br>`)+document.getElementById('content-body-box').innerHTML ;
+    document.getElementById('content-body-box').innerHTML = (`<div class='border1B padding10 borderRadius' id='${ack.id}'> TO: ${ack.reciver} </br> STATUS: ${ack.status} </br> DURATION: ${ack.duration} </br> Started:${ack.started} </br> ID: ${ack.id} </br> </div></br>`)+document.getElementById('content-body-box').innerHTML ;
     document.getElementById(`${call_object.id}`).classList.add('activeCallBox');
 
 }
@@ -324,10 +326,11 @@ function handleDialStart(ack){
 }
 
 function createCallObject(ack){
-    return {id: callIdCreate(), duration: "NA" , reciver:ack.reciver, started: new Date(), status:'DIALER_STARTED'};
+    return {id: callIdCreate(), duration: "NA" , reciver:'', started: new Date(), status:'DIALER_STARTED'};
 }
 
 function callIdCreate(){
+    console.log('Id fired');
     return Number(new Date());
 }
 

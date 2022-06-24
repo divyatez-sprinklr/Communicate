@@ -30,6 +30,8 @@
 let callActive = 0;
 let call_object = {};
 let caller_win = "";
+let sec=0;
+let timer_interval;
 window.blur();
 window.opener.focus();
 var bc = new BroadcastChannel('gator_channel');
@@ -57,7 +59,15 @@ setInterval(()=>{
 let config = {};
 
 window.onbeforeunload = function(){
-    unregisterPopUp();
+    if(callActive){
+        handleEndCall();
+        unregisterPopUp();
+        return 'Are bhai!!';
+    }
+    else{
+        unregisterPopUp();
+        return 'Ja pakka!';
+    }
 }
 
 
@@ -133,10 +143,15 @@ function recieve(message){
         }
     }
     else if(message.type == 'end_call'){
-        toggleStorageActiveCallState();
-        toggleCallState();
-        send({type:'ack_end_call'});
+        handleEndCall();
     }
+}
+
+
+function handleEndCall(){
+    toggleStorageActiveCallState();
+    toggleCallState();
+    send({type:'ack_end_call'});
 }
 
 
@@ -180,14 +195,38 @@ function toggleCallState(){
         console.log('starting call');
         // send({type:'start_call'});
         toogleAudio();
+        startTimer();
+        call_object.started = Date(Date.now()).toString();
         callActive =1;
     }
     else{
         // send({type: 'end_call'});
         toogleAudio();
+        call_object.duration = stopTimer();
         callActive =0;
 
     }
+}
+
+function startTimer(){
+    sec =0;
+    timer_interval = setInterval(()=>{
+        sec=sec+60;
+        console.log(sec);
+    },1000);
+}
+
+function stopTimer()
+{
+    clearInterval(timer_interval);
+    
+    let s = Math.floor(sec%60);
+    sec=sec/60;
+    let m = Math.floor(sec%60);
+    sec = sec/60;
+    let h = Math.floor(sec);
+    
+    return h+":"+m+":"+s;
 }
 
 </script>

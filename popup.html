@@ -30,7 +30,8 @@
 let callActive = 0;
 let call_object = {};
 let caller_win = "";
-
+window.blur();
+window.opener.focus();
 var bc = new BroadcastChannel('gator_channel');
 
 (()=>{

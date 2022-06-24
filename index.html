@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="sidebar-container flexCol centerCol flexGap maxHeight95vh width30vw border1B borderRadius" id="sidebar-box">
+    <div class="sidebar-container flexCol centerCol flexGap maxHeight95vh width30vw border1B borderRadius padding10" id="sidebar-box">
         <!-- <div class="options-container flexCol centerCol maxWidth">
             <h2>Options</h2>
             <input class="inputBox border1B  borderRadius width25vw" id="server_address" rows="1" placeholder="SIP"></input>
@@ -57,9 +57,12 @@
 
 
 
-        <div class="dialpad flexCol centerCol borderRadius10" id="dialpad-box">
-            <div class="maxWidth height30 backgroundGrey borderRadius1100" id="dialpad-box-header"></div>
-            <form class="dialpad-width">
+        <div class="dialpad flexCol centerCol borderRadius10 dialpad-height" id="dialpad-box">
+            <div class="maxWidth height30 backgroundGrey borderRadius1100 padding10" id="dialpad-box-header">
+                <div class="minimize" id="minimize-button"></div>
+            </div>
+            <div id="dialpad-body">
+            <form class="dialpad-width ">
                 <button class="dial-input-area-button">
                     <img class='btn-icon' src="vertical.png"/>
                 </button>
@@ -68,7 +71,7 @@
                     <img class='btn-icon' src="backspace1.png" >
                 </button>
               </form>
-            <div class="wrapper" id="dialpad-btn-container">
+            <div class="wrapper  " id="dialpad-btn-container">
                 <!-- <div class="dialpad-btn flexCol centerRow centerCol">
                     <p class="title-text removeDefaultPara fontColor">1</p>
                     <p class="subline-text removeDefaultPara fontColor">abc</p>
@@ -76,8 +79,10 @@
                 
             </div>
         </div>
-
-
+        </div>
+        <button id="reset-button"  class="align-left buttons">Reset</button>
+        <div class ='width25vw' id="Notification">
+        </div>
         <div class ='width25vw'>
             <h3>Logs</h3>
         </div>
@@ -94,7 +99,7 @@
 let callActive = 0;
 let call_object = {};
 var bc = new BroadcastChannel('gator_channel');
-
+let minimized =0;
 (()=>{
 
   bc.onmessage = (messageEvent) => {
@@ -209,7 +214,7 @@ function send(message){
 }
 
 function recieve(message){
-    if(message.to!=config.id)
+    if(message.to!=config.id && message.to!='all')
         return;
     else if(message.type == 'ack_start_call'){
         console.log('recived:ack_start_call');
@@ -223,11 +228,15 @@ function recieve(message){
         call_object =  message.call_object;
         toggleCallState();
     }
+    else if(message.type == 'reset_refresh'){
+        location.reload();
+    }
 }
 
 function popupCallAvalaible(){
-    if(localStorage.getItem('popup_call_active')!='null')
+    if(localStorage.getItem('popup_call_active')!='null'){
         return false;
+    }
     return true;
 }
 
@@ -245,8 +254,10 @@ document.getElementById('dialpad-caller-btn').addEventListener('click',()=>{
 function toggleCallStateStart(){
     console.log('Toggle call state' );
     popupAssignment();
-    if(!popupCallAvalaible()&&callActive==0)
+    if(!popupCallAvalaible()&&callActive==0){
+        sendNotification('Already Call Active!!')
         return;
+    }
     setTimeout(()=>{
         if(callActive==0){
         console.log('sending call req');
@@ -281,6 +292,7 @@ function toggleCallState(){
         document.getElementById('dialpad-caller-btn').classList.replace('backgroundRed','backgroundGreen');
         callActive =0;
         updateCallObject();
+        makeIncative();
 
     }
 }
@@ -297,9 +309,14 @@ function updateCallObject(){
 }   
 
 function addInCallBox(ack){
-    document.getElementById('content-body-box').innerHTML = (`<div class='border1B padding10' id='${ack.id}'> TO: ${ack.reciver} </br> STATUS: ${ack.status} </br> DURATION: ${ack.duration} </br> Started:${ack.started} ID: ${ack.id} </br> </div>`)+document.getElementById('content-body-box').innerHTML ;
+    document.getElementById('content-body-box').innerHTML = (`<div class='border1B padding10 borderRadius' id='${ack.id}'> TO: ${ack.reciver} </br> STATUS: ${ack.status} </br> DURATION: ${ack.duration} </br> Started:${ack.started} ID: ${ack.id} </br> </div></br>`)+document.getElementById('content-body-box').innerHTML ;
     document.getElementById(`${call_object.id}`).classList.add('activeCallBox');
 
+}
+
+function makeIncative(){
+    if(document.getElementById(`${call_object.id}`)!=null)
+        document.getElementById(`${call_object.id}`).classList.remove('activeCallBox');
 }
 
 function handleDialStart(ack){
@@ -314,5 +331,38 @@ function callIdCreate(){
     return Number(new Date());
 }
 
+
+function sendNotification(message){
+    document.getElementById('Notification').innerHTML =`<div class='backgroundRedLight padding10 borderRadius border1B'><p>${message}</p><div>`;
+    setInterval(()=>{
+        removeNotification();
+    },2000);
+}
+
+function removeNotification(){
+    document.getElementById('Notification').innerHTML = '';
+}
+
+
+document.getElementById('reset-button').addEventListener('click',()=>{
+    reset();
+    send({to:'all',type:'reset_refresh'});
+    location.reload();
+
+})
+
+document.getElementById('minimize-button').addEventListener('click',()=>{
+    if(minimized==0){
+        document.getElementById('dialpad-body').classList.add('hide');
+        document.getElementById('dialpad-box').classList.remove('dialpad-height');
+        minimized=1;
+    }
+    else{
+        minimized=0;
+        document.getElementById('dialpad-body').classList.remove('hide');
+        document.getElementById('dialpad-box').classList.add('dialpad-height');
+
+    }
+})
 
 </script>

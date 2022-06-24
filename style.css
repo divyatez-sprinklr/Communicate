@@ -97,6 +97,9 @@ body {
   background-color: #b93030;
 }
 
+.backgroundRedLight {
+  background-color: rgba(255, 0, 0, 0.2);
+}
 
 #messages {
   border-radius: 0.25rem;
@@ -254,5 +257,13 @@ h2,h3{
 }
 
 .height30{
-  height: 20px;
+  height: 30px;
+}
+
+
+.minimize{
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: rgb(236, 188, 14);
 }

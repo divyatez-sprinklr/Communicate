@@ -8,7 +8,7 @@ document.getElementById("dialpad-box").style.right = "30px";
 
 
 
-console.log('Me runnig');
+//console.log('Me runnig');
 let arr =[
     {title:"1",subtitle:"_"},
     {title:"2",subtitle:"ABC"},
@@ -25,7 +25,7 @@ let arr =[
 ];
 
 let cursorLocation=0;
-console.log(arr);
+//console.log(arr);
 let ind=-1;
 arr.forEach(item => {
     ind++;
@@ -36,7 +36,7 @@ arr.forEach(item => {
             <p class="subline-text removeDefaultPara fontColor">${item.subtitle}</p>
         </div>
     </div>`;
-    console.log(ind);
+    //console.log(ind);
 });
 
 ind=-1;
@@ -44,12 +44,12 @@ setTimeout(()=>{
 arr.forEach(item => {
    ind++;
     let current = document.getElementById("dialpad"+ind);
-    console.log(current);
+    //console.log(current);
     current.onclick = function () {
-        console.log('clicked');
+        //console.log('clicked');
         let dialpadInput = document.getElementById('dialpad-input');
         let val = dialpadInput.value;
-        console.log("BEFORE "+dialpadInput.selectionStart);
+        //console.log("BEFORE "+dialpadInput.selectionStart);
         dialpadInput.selectionStart = cursorLocation;
         dialpadInput.value = val.slice(0, cursorLocation) + item.title + val.slice(cursorLocation,val.length);
         cursorLocation++;
@@ -62,7 +62,7 @@ arr.forEach(item => {
 
     }
 
-    console.log(ind);
+    //console.log(ind);
 
 });
 },500);

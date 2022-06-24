@@ -4,10 +4,13 @@
 
 .dialpad{
     padding: 0;
-    background-color: #1f1f1f;
+    background-color: rgba(31, 31, 31,.1);
     width: 300px;
     position: absolute;
+}
 
+.dialpad-height{
+    height: 476px;
 }
 .wrapper {
     border: #9da09e solid; 
@@ -53,7 +56,6 @@
 .dial-area{
     margin: 0;
     background: rgb(31, 32, 35);
-    border: 1px solid #9da09e;
     border-radius: 4px;
     font-size: 13px;
     color: rgb(247, 248, 248);
@@ -80,7 +82,7 @@
 form {
     display:flex;
     flex-direction:row;
-    border: solid #9da09e; 
+    border: .5px solid #9da09e; 
     border-bottom: none;
     padding:2px;
     background-color: #1f1f1f;

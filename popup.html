@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Main App</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="./style.css">
+</head>
+<body>
+  <div class="root-container flexRow centerRow flexGap" id="root-box">
+    <p id="activity">Inactive</p>
+    <div style="display:none;" class="sidebar-container flexCol centerCol flexGap maxHeight95vh width30vw border1B borderRadius" id="sidebar-box">
+        <div class ='width25vw'>
+            <h3>Logs</h3>
+        </div>
+        <div class ='width25vw border1B'  id="logs">
+        </div>
+        </br>
+        <audio id ='audioStream' hidden loop>
+          <source src="./media/aud.mp3" type="audio/mp3">
+        </audio>
+    </div>
+</div>
+</body>
+
+<script>
+
+let callActive = 0;
+let call_object = {};
+let caller_win = "";
+
+var bc = new BroadcastChannel('gator_channel');
+
+(()=>{
+
+  bc.onmessage = (messageEvent) => {
+    addToLogs(str(messageEvent.data));
+    recieve(messageEvent.data);
+  }
+
+})()
+
+setInterval(()=>{
+  window.blur();
+},100);
+
+/// engine code //
+setInterval(()=>{
+    console.log("Arr:"+localStorage.getItem('window_ids'));
+    console.log("Popup:"+localStorage.getItem('popup_assigned'));
+    console.log("Popup call active: "+localStorage.getItem('popup_call_active'));
+},10000);
+
+let config = {};
+
+window.onbeforeunload = function(){
+    unregisterPopUp();
+}
+
+
+function unregisterPopUp(){
+    localStorage.setItem('popup_assigned','null');
+}
+
+function str(str){
+    return JSON.stringify(str);
+}
+
+function ustr(str){
+    return JSON.parse(str);
+}
+
+
+//heartbeat
+
+function reset(){
+    localStorage.setItem('window_ids','null');
+    localStorage.setItem('popup_call_active','null');
+    localStorage.setItem('popup_assigned','null');
+}
+
+
+function addToLogs(str){
+    document.getElementById('logs').innerHTML+= ` <div class='maxWidth border1B padding10 overflowScroll' '>${(new Date()).getHours()}:${(new Date()).getMinutes()}:${ (new Date()).getSeconds()}#${str}</div>`;
+}
+
+
+function sendHandler(message){
+    addToLogs(str(message));
+    bc.postMessage(message);
+}
+
+
+
+
+function send(message){
+    console.log('send');
+    message.from ='popup';
+    message.to = caller_win;
+    if(message.type == 'ack_start_call'){
+        console.log('send:ack_start_call');
+        call_object.status = 'call_started';
+        message.call_object = call_object;
+        sendHandler(message);
+    }
+    else if(message.type == 'ack_end_call'){
+      console.log('ack_end_call');
+      call_object.status = 'call_ended';
+      message.call_object = call_object;
+      sendHandler(message);
+    }
+}
+
+function recieve(message){
+    if(message.to!='popup')
+        return;
+
+    console.log('Recived messege');
+    if(message.type == 'start_call'){
+        caller_win = message.from;
+        call_object = message.call_object;
+        console.log(call_object);
+        if(!popupCallAvalaible()){
+            addToLogs('Call already active');
+        }
+        else{
+            toggleStorageActiveCallState();
+            toggleCallState();  
+            send({type:'ack_start_call'});      
+        }
+    }
+    else if(message.type == 'end_call'){
+        toggleStorageActiveCallState();
+        toggleCallState();
+        send({type:'ack_end_call'});
+    }
+}
+
+
+
+function toggleStorageActiveCallState(){
+    console.log('toggleStorageActiveCallState');
+    if(localStorage.getItem('popup_call_active') == 'null'){
+        console.log('setting not null');
+        localStorage.setItem('popup_call_active',"User:"+caller_win);
+    }
+    else{
+    
+        console.log('setting null');
+        localStorage.setItem('popup_call_active','null');
+    }
+}
+
+
+function toogleAudio(){
+  if(callActive){
+    document.getElementById('activity').innerText = 'Inactive';
+      //document.getElementById('audioStream').pause();
+  }
+  else{
+    document.getElementById('activity').innerText = 'Active';
+      //document.getElementById('audioStream').play();
+  }
+}
+
+function popupCallAvalaible(){
+
+    if(localStorage.getItem('popup_call_active')!='null')
+        return false;
+    return true;
+}
+
+
+function toggleCallState(){
+    console.log('Toggle call state' );
+    if(callActive==0){
+        console.log('starting call');
+        // send({type:'start_call'});
+        toogleAudio();
+        callActive =1;
+    }
+    else{
+        // send({type: 'end_call'});
+        toogleAudio();
+        callActive =0;
+
+    }
+}
+
+</script>

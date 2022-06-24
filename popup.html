@@ -19,8 +19,8 @@
         <div class ='width25vw border1B'  id="logs">
         </div>
         </br>
-        <audio id ='audioStream' hidden loop>
-          <source src="./media/aud.mp3" type="audio/mp3">
+        <audio id ='audioStream' hidden >
+          <source src="./media/aud.wav" type="audio/wav">
         </audio>
     </div>
 </div>
@@ -177,11 +177,11 @@ function toggleStorageActiveCallState(){
 function toogleAudio(){
   if(callActive){
     document.getElementById('activity').innerText = 'Inactive';
-    // document.getElementById('audioStream').pause();
+     document.getElementById('audioStream').pause();
   }
   else{
     document.getElementById('activity').innerText = 'Active';
-    //document.getElementById('audioStream').play();
+    document.getElementById('audioStream').play();
   }
 }
 
